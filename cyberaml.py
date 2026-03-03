@@ -1261,6 +1261,8 @@ if "bulk_results" not in st.session_state:
     st.session_state.bulk_results = None
 if "bulk_gemini" not in st.session_state:
     st.session_state.bulk_gemini = None
+if "bulk_file_hash" not in st.session_state:
+    st.session_state.bulk_file_hash = None
 if "neo4j_rings" not in st.session_state:
     st.session_state.neo4j_rings = []
 
@@ -1543,8 +1545,27 @@ elif page == "Bulk CSV Scanner":
 
     uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"], key="bulk_upload", label_visibility="collapsed")
 
+    if st.session_state.bulk_results is not None:
+        col_clear, _ = st.columns([1, 3])
+        with col_clear:
+            if st.button("🗑️  Clear Previous Results", key="bulk_clear_top", use_container_width=True):
+                st.session_state.bulk_results = None
+                st.session_state.bulk_gemini = None
+                st.session_state.bulk_file_hash = None
+                st.rerun()
+        st.markdown(f"<span style='color:#6b7499;font-size:0.82rem;font-family:Share Tech Mono'>⚠️ Showing results from previous scan ({len(st.session_state.bulk_results):,} rows). Clear to upload a new file.</span>", unsafe_allow_html=True)
+        st.markdown("---")
+
     if uploaded_file is not None:
+        import hashlib
+        file_hash = hashlib.md5(uploaded_file.getvalue()).hexdigest()
+        if file_hash != st.session_state.bulk_file_hash:
+            st.session_state.bulk_results = None
+            st.session_state.bulk_gemini = None
+            st.session_state.bulk_file_hash = file_hash
+
         try:
+            uploaded_file.seek(0)
             df_raw = pd.read_csv(uploaded_file)
             st.markdown(f"<div style='color:#00e5c3;font-family:Share Tech Mono;font-size:0.82rem;margin-bottom:12px'>✓ Loaded {len(df_raw):,} rows · {len(df_raw.columns)} columns detected</div>", unsafe_allow_html=True)
 
@@ -1608,6 +1629,14 @@ elif page == "Bulk CSV Scanner":
 
     # ── Show results ────────────────────────────────────────────────────────────
     if st.session_state.bulk_results:
+        col_clear, _ = st.columns([1, 3])
+        with col_clear:
+            if st.button("🗑️  Clear Results", key="bulk_clear", use_container_width=True):
+                st.session_state.bulk_results = None
+                st.session_state.bulk_gemini = None
+                st.session_state.bulk_file_hash = None
+                st.rerun()
+
         results = st.session_state.bulk_results
         n = len(results)
         critical  = [r for r in results if r["class"]=="critical"]
