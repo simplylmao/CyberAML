@@ -1,0 +1,191 @@
+=======================================================
+DEVPOST SUBMISSION — CyberAML Shield
+Copy-paste each section into the corresponding field
+=======================================================
+
+─────────────────────────────────────────
+PROJECT TITLE
+─────────────────────────────────────────
+CyberAML Shield — AI-Powered AML & Cybersecurity Convergence Platform
+
+
+─────────────────────────────────────────
+TAGLINE  (one-liner subtitle)
+─────────────────────────────────────────
+Real-time transaction risk scoring · Neo4j mule ring detection · Gemini AI analysis
+
+
+─────────────────────────────────────────
+PROJECT DESCRIPTION
+─────────────────────────────────────────
+
+## The Problem
+
+Financial crime and cybercrime no longer operate in silos. A single fraudulent transaction today may involve a politically exposed person (AML risk), routing through a crypto wallet via a North Korean IP address (cyber risk), destined for a sanctioned country (screening risk) — yet most compliance platforms treat these as separate alerts in separate systems.
+
+The result: compliance teams are overwhelmed with false positives, genuine threats slip through the cracks, and money mule networks operate undetected across hundreds of accounts.
+
+There is no affordable, unified platform that:
+- Converges AML and cyber signals into a single coherent risk score
+- Detects coordinated mule rings from real transaction graph data
+- Produces board-ready intelligence — not just raw alerts
+
+## Our Solution: CyberAML Shield
+
+CyberAML Shield is a full-stack financial intelligence platform that scores transactions across **24 risk factors in 8 signal domains**, detects money mule networks using **Neo4j graph analytics**, and delivers executive-grade intelligence via **Google Gemini AI**.
+
+### How It Works
+
+**1. CAML Risk Score Engine (24 factors · 8 domains)**
+Every transaction is scored 0–200 across:
+- CYBER: IP/billing mismatch, login attempts, new device fingerprinting
+- AML: Source of funds, customer type, beneficial ownership layers
+- GEO: Destination country, counterparty country risk
+- BEHAV: Velocity, structuring patterns, behavioral change detection
+- SCRN: Sanctions screening, adverse media, PEP status, law enforcement match
+
+When AML and Cyber signals co-occur, a **convergence multiplier (up to ×1.50)** elevates the score — reflecting the real-world compounding of risk.
+
+**2. Bulk CSV Scanner (Enterprise Batch Processing)**
+Upload any bank export or core banking dump — no fixed template required. Our intelligent column auto-mapper recognises 100+ field name variations. Scan thousands of transactions with a live progress bar, then get a Gemini AI executive summary written at Chief AML Officer level. Export flagged results for investigation.
+
+**3. Mule Radar — Neo4j Live Graph Detection**
+Scored transactions are pushed into a Neo4j AuraDB property graph as Account nodes and SENT_TO relationships. Three Cypher queries detect suspicious patterns in real-time:
+- **Sanctioned Hub:** Multiple accounts transacting to the same sanctioned country
+- **IP Geo Cluster:** Accounts sharing a high-risk IP origin country
+- **PEP High-Value:** Politically exposed persons sending large cross-border transactions
+
+Detected rings are rendered as interactive D3.js force-directed network graphs with Gemini AI narrative analysis.
+
+**4. Gemini AI Integration**
+- Per-transaction: plain-English explanation of why a score is elevated
+- Ring analysis: investigative narrative on detected mule networks
+- Bulk summary: board-level executive brief citing actual statistics and top-5 risks
+
+
+─────────────────────────────────────────
+TECHNOLOGIES USED  (select/tag these)
+─────────────────────────────────────────
+- Python
+- Streamlit
+- Neo4j / Cypher
+- Google Gemini AI (Gemini 1.5 Flash)
+- D3.js
+- SQLite
+- Pandas
+
+
+─────────────────────────────────────────
+KEY FEATURES & INNOVATION
+─────────────────────────────────────────
+
+**What makes CyberAML Shield genuinely novel:**
+
+1. **AML + Cyber Convergence Scoring** — No existing open platform combines cybersecurity signals (device fingerprinting, IP geolocation, login anomalies) with AML signals (PEP, sanctions, source of funds) in a single score. The convergence multiplier is the key innovation.
+
+2. **Schema-free Bulk Processing** — Most AML tools require a rigid input template. Our 100+ alias auto-mapper works with any bank export format out of the box — practical for real compliance teams.
+
+3. **Real Graph-based Ring Detection** — Unlike mock visualisations, our Mule Radar runs live Cypher queries against an actual Neo4j graph built from your own transaction data. The rings shown are real patterns, not generated demos.
+
+4. **Gemini-powered Intelligence Layer** — AI doesn't just flag — it explains. Compliance officers get plain English rationale and board-ready summaries, drastically reducing time-to-decision.
+
+5. **End-to-End in One Platform** — From raw CSV upload → risk scoring → graph ingestion → ring detection → AI brief → export, the entire compliance workflow lives in one interface.
+
+
+─────────────────────────────────────────
+ARCHITECTURE OVERVIEW
+─────────────────────────────────────────
+
+User uploads CSV or submits transaction
+         ↓
+Streamlit frontend (Python)
+         ↓
+24-Factor CAML Risk Engine
+  [8 domain scorers + convergence multiplier]
+         ↓
+     ┌───┴───────────────┐
+     ▼                   ▼
+SQLite (cyberaml.db)   Neo4j AuraDB
+[local persistence]    [graph: Account nodes
+                        + SENT_TO edges]
+                            ↓
+                     Cypher Ring Queries
+                     [Sanctioned Hub /
+                      IP Cluster / PEP]
+                            ↓
+                     D3.js Graph Render
+                            ↓
+                     Gemini AI Analysis
+
+
+─────────────────────────────────────────
+GITHUB REPOSITORY
+─────────────────────────────────────────
+https://github.com/YOUR_USERNAME/cyberaml-shield
+
+(Make sure repo is PUBLIC before submitting)
+
+README includes:
+✅ Problem statement
+✅ Architecture diagram
+✅ Full setup instructions
+✅ Technologies list
+✅ Demo flow walkthrough
+
+
+─────────────────────────────────────────
+DEPLOYMENT LINK
+─────────────────────────────────────────
+https://your-app.streamlit.app
+
+(Deploy free at share.streamlit.io — see deployment steps below)
+
+
+─────────────────────────────────────────
+DEMO VIDEO SCRIPT (2–5 min guide)
+─────────────────────────────────────────
+
+SUGGESTED STRUCTURE:
+
+[0:00–0:30] Hook
+"Financial crime and cybercrime have merged — but compliance tools haven't.
+CyberAML Shield is the first platform to converge both into a single AI-powered risk score."
+
+[0:30–1:15] Dashboard + Single Transaction
+- Show Dashboard (live feed, KPI cards)
+- Go to CAML Score, fill in a high-risk transaction (Crypto Wallet, KP destination, Foreign PEP)
+- Show the score appearing, convergence multiplier, Gemini explanation
+
+[1:15–2:15] Bulk CSV Scanner
+- Upload the 250-row sample CSV
+- Watch the live progress bar
+- Show batch KPI dashboard (Critical/High/Medium/Low breakdown)
+- Click Generate Gemini Executive Summary — show the board-level brief
+- Export flagged CSV
+
+[2:15–3:15] Mule Radar — Neo4j Live
+- Click Push to Neo4j
+- Go to Mule Radar → Live Graph tab
+- Click Run Ring Detection
+- Show a Sanctioned Hub ring in the D3 graph
+- Click Ask Gemini to Analyse — show the investigative narrative
+
+[3:15–3:45] Close
+- "This runs on real data. The rings you just saw were detected from the transactions we uploaded — not mock data."
+- "Built with Python, Streamlit, Neo4j AuraDB, Google Gemini, and D3.js"
+
+
+─────────────────────────────────────────
+DEPLOYMENT STEPS (Streamlit Cloud — Free)
+─────────────────────────────────────────
+
+1. Push app.py and README.md to a PUBLIC GitHub repo
+
+2. Go to https://share.streamlit.io
+   → Sign in with GitHub
+   → Click "New app"
+   → Select your repo, branch: main, file: app.py
+
+3. Click Deploy — live URL generated in ~2 minutes
+
+4. Paste the URL into Devpost as your Deployment Link
