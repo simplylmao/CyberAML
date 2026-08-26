@@ -1,204 +1,479 @@
 # 🛡️ CyberAML Shield
 
-> **AI-powered Anti-Money Laundering & Cybersecurity threat detection platform**  
-> Real-time transaction risk scoring · Neo4j graph-based mule ring detection · Gemini AI analysis
+> **AI-powered Anti-Money Laundering & Cybersecurity Threat Detection Platform**
+
+Real-time transaction risk scoring · Graph-based mule network detection · Gemini AI analysis
 
 ---
 
 ## 🔍 What is CyberAML Shield?
 
-CyberAML Shield is an enterprise-grade AML (Anti-Money Laundering) and cybersecurity convergence platform that scores financial transactions across **24 risk factors** in **8 signal domains**, detects coordinated money mule networks using a **Neo4j graph database**, and delivers board-level intelligence summaries via **Google Gemini AI**.
+**CyberAML Shield** is an AML and cybersecurity convergence platform designed to identify suspicious financial transactions by combining traditional Anti-Money Laundering indicators with cybersecurity and behavioral signals.
 
-Built for compliance teams, financial intelligence units, and fraud analysts — it processes individual transactions or bulk CSV uploads of thousands of records in real-time.
+The platform evaluates transactions across **24 risk factors and 8 signal domains**, producing a **CAML risk score from 0–200**.
+
+It also provides:
+
+* Individual transaction risk scoring
+* Bulk CSV transaction scanning
+* Behavioral and cybersecurity analysis
+* Graph-based relationship visualization
+* Potential mule-network identification
+* SQLite transaction history
+* Gemini-powered investigation summaries
+* Executive-level AML intelligence reports
+
+The project was developed by **Aditya**, a student at **VIT Chennai**, as a **hackathon project**.
 
 ---
 
 ## 🚨 Problem Statement
 
-Financial institutions face a dual threat: **money laundering** and **cybercrime** increasingly converge in the same transactions. Traditional rule-based systems miss this convergence:
+Financial crime increasingly combines traditional money-laundering techniques with cyber-enabled attacks.
 
-- A wire transfer to a sanctioned country via a crypto wallet looks like two separate alerts in legacy systems
-- Money mule rings span hundreds of accounts — impossible to detect row-by-row
-- Compliance teams drown in false positives, missing the real threats
-- No single platform combines AML signals (PEP status, sanctions screening) with cyber signals (IP geolocation mismatch, device fingerprint anomalies)
+Traditional rule-based monitoring systems often analyze transactions independently. This can make it difficult to identify situations where several seemingly unrelated indicators occur together.
 
-**The result:** Financial crime goes undetected. Institutions face regulatory fines. Criminals move money freely.
+For example:
 
----
+* A new device performs multiple high-value transfers.
+* The account suddenly changes its transaction behavior.
+* Funds are sent through a higher-risk payment channel.
+* Multiple accounts appear connected through common destinations.
+* A customer has sanctions, PEP, or adverse-media indicators.
 
-## ✅ Our Solution
+Individually, these signals may produce weak alerts.
 
-CyberAML Shield unifies **AML + cyber signals** into a single convergence score with:
+Together, they can indicate a much more significant financial-crime threat.
 
-- **24-factor risk engine** spanning 8 domains (CYBER, AML, DEMO, GEO, BEHAV, PROD, NETW, SCRN)
-- **Convergence multipliers** (up to ×1.50) when multiple high-risk signals co-occur
-- **Neo4j graph analytics** for detecting coordinated mule rings from real transaction data
-- **Bulk CSV scanner** for processing entire day's transactions in seconds
-- **Gemini AI** writing executive summaries fit for board/regulator reporting
+CyberAML Shield addresses this problem by combining these signals into a unified risk model.
 
 ---
 
-## 🏗️ Architecture Overview
+## ✅ Solution
 
+CyberAML Shield combines AML, cybersecurity, behavioral, geographic and network indicators into a single **CAML risk score**.
+
+The system provides:
+
+### 1. 24-Factor Risk Engine
+
+Transactions are evaluated across eight signal domains:
+
+| Domain    | Example Signals                                             |
+| --------- | ----------------------------------------------------------- |
+| **CYBER** | IP mismatch, login attempts, new device, device changes     |
+| **AML**   | Source of funds, customer type, ownership complexity        |
+| **DEMO**  | Account age, customer-country risk                          |
+| **GEO**   | Destination and counterparty risk                           |
+| **BEHAV** | Velocity, behavioral change, structuring, round-number bias |
+| **PROD**  | Account type, payment channel                               |
+| **NETW**  | Linked flagged accounts                                     |
+| **SCRN**  | Sanctions, adverse media, law enforcement, PEP              |
+
+---
+
+## 🎯 CAML Risk Score
+
+The scoring engine produces a score from:
+
+**0 → 200**
+
+Risk levels are:
+
+|   Score | Level       |
+| ------: | ----------- |
+|    0–39 | 🟢 LOW      |
+|   40–69 | 🟡 MEDIUM   |
+|   70–99 | 🟠 HIGH     |
+| 100–200 | 🔴 CRITICAL |
+
+---
+
+## 🔀 Convergence Scoring
+
+One of the central ideas behind CyberAML Shield is that AML and cybersecurity signals should not always be treated independently.
+
+When multiple high-risk domains appear together, the system applies a convergence multiplier.
+
+Current multipliers include:
+
+* **1.00×** — normal
+* **1.20×** — multiple active risk domains
+* **1.35×** — significant cross-domain activity
+* **1.50×** — strong AML + cybersecurity convergence
+
+This allows combinations of otherwise moderate indicators to produce an appropriately elevated risk score.
+
+---
+
+## 📂 Bulk CSV Scanner
+
+The Bulk Scanner allows an analyst to upload transaction data and score hundreds or thousands of records.
+
+Features include:
+
+* CSV upload
+* Automatic column alias recognition
+* Row-by-row risk scoring
+* Live progress bar
+* Risk distribution
+* Value-at-risk calculation
+* High/Critical transaction filtering
+* CSV export
+* Gemini executive summary
+
+The application recognizes multiple common column names, such as:
+
+```text
+amount
+txn_amount
+transaction_amount
+value
+amt
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Streamlit Frontend                        │
-│  Dashboard │ CAML Score │ Bulk Scanner │ Mule Radar │ Database  │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-  ┌───────────────┐ ┌─────────┐ ┌─────────────┐
-  │  Risk Scoring │ │ Gemini  │ │    Neo4j    │
-  │    Engine     │ │   AI    │ │   AuraDB    │
-  │  (24 factors) │ │  API    │ │ Graph Store │
-  └───────┬───────┘ └─────────┘ └──────┬──────┘
-          │                             │
-          ▼                             ▼
-  ┌───────────────┐             ┌─────────────┐
-  │   SQLite DB   │             │   Cypher    │
-  │  cyberaml.db  │             │Ring Queries │
-  └───────────────┘             └─────────────┘
+
+and maps them into the internal scoring model.
+
+---
+
+## 🕸️ Mule Radar
+
+CyberAML Shield includes a graph-style network visualization showing relationships between:
+
+```text
+Customer
+   │
+   ├──── Transaction
+   │
+   └──── Destination Country
+```
+
+The visualization can help analysts identify:
+
+* Customers with unusually high transaction counts
+* Customers connected to multiple destinations
+* High-risk customers
+* Repeated relationships
+* Potential coordinated activity
+
+The visualization uses **D3.js** and does not require an external Neo4j server.
+
+---
+
+## 🤖 Gemini AI
+
+Google Gemini can provide natural-language analysis on top of the deterministic risk engine.
+
+Gemini can generate:
+
+### Transaction Analysis
+
+Explains why a transaction received a particular risk score.
+
+### Mule Network Analysis
+
+Provides investigative context around suspicious customer relationships.
+
+### Executive Summary
+
+Produces a concise AML intelligence brief covering:
+
+* Overall risk
+* Major indicators
+* Potential laundering behavior
+* Cybersecurity convergence
+* Recommended investigation actions
+
+The application continues to work without Gemini. The deterministic risk engine does not depend on an external AI service.
+
+---
+
+## 📊 Dashboard
+
+The dashboard provides an overview of:
+
+* Total transactions
+* Critical alerts
+* High-risk transactions
+* Average CAML score
+* Value at risk
+* Risk distribution
+* Recent alerts
+
+---
+
+## 🗄️ Local Database
+
+CyberAML Shield uses SQLite to retain transaction scoring history.
+
+Database file:
+
+```text
+cyberaml.db
+```
+
+The database is automatically created when the application starts.
+
+The database stores:
+
+* Transaction ID
+* Customer ID
+* Amount
+* Destination country
+* Risk score
+* Risk level
+* Timestamp
+
+---
+
+## 🏗️ Architecture
+
+```text
+┌──────────────────────────────────────────────────────────┐
+│                  Streamlit Frontend                      │
+│                                                          │
+│ Dashboard │ CAML Score │ Bulk Scanner │ Mule Radar      │
+│                         │                │                │
+└─────────────────────────┼────────────────┼────────────────┘
+                          │                │
+              ┌───────────▼───────┐   ┌──▼──────────────┐
+              │  Risk Engine      │   │ Graph Engine    │
+              │                   │   │                │
+              │ 24 Risk Factors   │   │ D3.js Network  │
+              │ 8 Signal Domains  │   │ Visualization   │
+              └───────────┬───────┘   └────────────────┘
+                          │
+                ┌─────────▼─────────┐
+                │    SQLite DB      │
+                │ Transaction       │
+                │ History           │
+                └─────────┬─────────┘
+                          │
+                ┌─────────▼─────────┐
+                │    Gemini AI      │
+                │ Investigation &   │
+                │ Executive Reports │
+                └───────────────────┘
 ```
 
 ---
 
-## ✨ Key Features
+## 🛠️ Technologies
 
-### 🔢 24-Factor CAML Risk Score
-Scores every transaction 0–200 across 8 signal domains:
-
-| Domain | Signals |
-|--------|---------|
-| **CYBER** | IP/billing country mismatch, login attempts, new device, device changes |
-| **AML** | Source of funds, customer type, beneficial ownership layers |
-| **DEMO** | Account age, customer country risk |
-| **GEO** | Destination country, counterparty country |
-| **BEHAV** | Velocity (txns today), behavior change %, structuring, round-number bias |
-| **PROD** | Account type, payment channel |
-| **NETW** | Linked flagged accounts |
-| **SCRN** | Sanctions screening, adverse media, law enforcement match, PEP status |
-
-**Convergence Multiplier:** When AML + Cyber signals co-occur, scores are multiplied (up to ×1.50) — reflecting the real-world elevation in risk.
-
-### 📂 Bulk CSV Scanner (Enterprise Batch Processing)
-- Upload any bank export or core banking dump — **no fixed template required**
-- **100+ column name aliases** auto-detected (e.g. `amount`/`txn_amount`/`value`/`amt` all work)
-- Processes up to **10,000 rows** with live progress bar
-- Batch analytics dashboard: KPI cards, risk distribution, value at risk
-- Gemini AI writes a **board-ready executive brief** from batch statistics
-- Export flagged results (Critical + High) as CSV
-
-### 🕸️ Mule Radar — Neo4j Live Graph Detection
-- Pushes scored transactions into **Neo4j AuraDB** as a property graph
-- **3 Cypher ring detection patterns:**
-  - **Sanctioned Hub** — Multiple senders transacting to sanctioned countries (KP, IR, SY...)
-  - **IP Geo Cluster** — Accounts sharing high-risk IP origin country
-  - **PEP High-Value** — Politically Exposed Persons sending large transactions
-- Detected rings rendered as **interactive D3.js network graphs**
-- Gemini AI writes a detailed ring analysis on demand
-
-### 🤖 Gemini AI Integration
-- Per-transaction analysis: explains *why* a score is high in plain English
-- Ring analysis: investigative narrative on detected mule networks
-- Bulk executive summary: Chief AML Officer-style board brief
-
-### 📊 Live Alert Feed & Dashboard
-- Real-time transaction stream with risk badges
-- Dashboard KPIs: total transactions, risk distribution, average score, value at risk
-- Historical scoring from SQLite database
+| Layer           | Technology                |
+| --------------- | ------------------------- |
+| Frontend        | Python + Streamlit        |
+| Risk Engine     | Python                    |
+| Data Processing | Pandas + NumPy            |
+| Database        | SQLite                    |
+| Visualization   | D3.js                     |
+| AI              | Google Gemini             |
+| Deployment      | Streamlit Community Cloud |
 
 ---
 
-## 🛠️ Technologies Used
+## 🚀 Running Locally
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend / App | Python · Streamlit |
-| Risk Scoring Engine | Pure Python (custom 24-factor model) |
-| Graph Database | Neo4j AuraDB (cloud) · Cypher query language |
-| AI / LLM | Google Gemini 1.5 Flash API |
-| Network Visualization | D3.js v7 (force-directed graphs) |
-| Local Database | SQLite (via Python `sqlite3`) |
-| Data Processing | Pandas |
-| Deployment | Streamlit Community Cloud |
+### Requirements
 
----
+* Python 3.9+
+* pip
+* Optional Google Gemini API key
 
-## 🚀 Setup Instructions
+### Clone the repository
 
-### Prerequisites
-- Python 3.9+
-- A Google Gemini API key ([get one free](https://makersuite.google.com/app/apikey))
-- Neo4j AuraDB free instance ([sign up](https://neo4j.com/cloud/aura/))
-
-### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/cyberaml-shield.git
+git clone https://github.com/simplylmao/cyberaml-shield.git
 cd cyberaml-shield
 ```
 
-### 2. Install dependencies
+### Install dependencies
+
 ```bash
-pip install streamlit pandas neo4j google-generativeai
+pip install -r requirements.txt
 ```
 
-### 3. Configure credentials
-Open `app.py` and update the following near the top of the file:
+### Run
 
-```python
-# Gemini
-GEMINI_API_KEY = "your_gemini_api_key_here"
-
-# Neo4j
-NEO4J_URI      = "neo4j+s://YOUR_INSTANCE.databases.neo4j.io"
-NEO4J_USER     = "neo4j"
-NEO4J_PASSWORD = "your_neo4j_password"
-NEO4J_DATABASE = "neo4j"
-```
-
-### 4. Run the app
 ```bash
 streamlit run app.py
 ```
 
-The app opens at `http://localhost:8501`
+The application will normally be available at:
 
-### 5. First-time demo flow
-1. Go to **Bulk CSV Scanner** → click **Download Sample CSV**
-2. Upload the downloaded file → click **Scan All Rows**
-3. After scan completes → click **Push All Results to Neo4j Graph**
-4. Navigate to **Mule Radar → Live Graph (Neo4j)** tab
-5. Click **Run Ring Detection** to see live patterns
-6. Click **Generate Gemini Executive Summary** for a board-level brief
+```text
+http://localhost:8501
+```
+
+---
+
+## 🤖 Configure Gemini
+
+Gemini is optional.
+
+For local development, create:
+
+```text
+.streamlit/secrets.toml
+```
+
+and add:
+
+```toml
+GEMINI_API_KEY = "your-api-key"
+```
+
+Do **not** commit the real API key to GitHub.
+
+The `.gitignore` already excludes:
+
+```text
+.streamlit/secrets.toml
+```
+
+---
+
+## ☁️ Streamlit Community Cloud
+
+1. Push the project to GitHub.
+2. Open Streamlit Community Cloud.
+3. Create a new application.
+4. Select:
+
+```text
+simplylmao/cyberaml-shield
+```
+
+5. Set the main file to:
+
+```text
+app.py
+```
+
+6. Add the following secret:
+
+```toml
+GEMINI_API_KEY = "your-api-key"
+```
+
+7. Deploy.
+
+The application can run without Gemini, but adding the API key enables AI-generated investigation and executive summaries.
+
+---
+
+## 🧪 Demo Workflow
+
+For a quick demonstration:
+
+### Step 1
+
+Open:
+
+```text
+Bulk Scanner
+```
+
+### Step 2
+
+Click:
+
+```text
+Download Sample CSV
+```
+
+### Step 3
+
+Upload the downloaded CSV.
+
+### Step 4
+
+Click:
+
+```text
+Scan All Rows
+```
+
+### Step 5
+
+Review:
+
+* Risk distribution
+* Critical alerts
+* High-risk transactions
+* Value at risk
+
+### Step 6
+
+Open:
+
+```text
+Mule Radar
+```
+
+to view the relationship graph.
+
+### Step 7
+
+If Gemini is configured, generate:
+
+```text
+Executive Summary
+```
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 cyberaml-shield/
-├── app.py              # Main Streamlit application (all-in-one)
-├── README.md           # This file
-└── cyberaml.db         # SQLite database (auto-created on first run)
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+│
+├── .streamlit/
+│   └── secrets.toml.example
+│
+└── data/
+    └── sample_transactions.csv
 ```
 
----
-
-## 🌐 Live Demo
-
-🔗 **[Live App on Streamlit Cloud](https://your-app.streamlit.app)** *(update with your URL)*
+The SQLite database is automatically generated and should not be committed to GitHub.
 
 ---
 
-## 👥 Team
+## 🔐 Security Notes
 
-| Name | Role |
-|------|------|
-| *(Add your name)* | *(Add your role)* |
+CyberAML Shield is a hackathon/educational prototype.
+
+Do not upload real customer financial data to an unsecured deployment.
+
+Never commit:
+
+* API keys
+* passwords
+* production database files
+* customer information
+* financial institution credentials
+
+Use Streamlit Secrets for deployment credentials.
+
+---
+
+## 🎓 Project Information
+
+**Project:** CyberAML Shield
+**Developer:** Aditya
+**College:** VIT Chennai
+**Team:** Solo
+**Event:** Hackathon
 
 ---
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License.
+
+Copyright © 2026 Aditya.
